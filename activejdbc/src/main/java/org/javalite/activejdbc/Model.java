@@ -204,16 +204,16 @@ public abstract class Model extends CallbackSupport implements Externalizable {
      */
     protected void hydrate(Map<String, Object> attributesMap, boolean fireAfterLoad) {
 
-        Set<String> attributeNames = metaModelLocal.getAttributeNames();
+//        Set<String> attributeNames = metaModelLocal.getAttributeNames();
         for (Map.Entry<String, Object> entry : attributesMap.entrySet()) {
-            if (attributeNames.contains(entry.getKey())) {
+//            if (attributeNames.contains(entry.getKey())) {
                 if (entry.getValue() instanceof Clob && metaModelLocal.cached()) {
                     this.attributes.put(entry.getKey(), Convert.toString(entry.getValue()));
                 } else {
                     this.attributes.put(entry.getKey(), metaModelLocal.getDialect().overrideDriverTypeConversion(
                             metaModelLocal, entry.getKey(), entry.getValue()));
                 }
-            }
+//            }
         }
         if (getCompositeKeys() != null){
         	compositeKeyPersisted = true;
