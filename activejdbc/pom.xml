@@ -156,9 +156,10 @@
         </testResources>
         <plugins>
             <plugin>
-                <groupId>cn.yaomaitong</groupId>
+                <groupId>org.javalite</groupId>
                 <artifactId>activejdbc-instrumentation</artifactId>
-                <version>${project.version}</version>
+                <!--<version>${project.version}</version>-->
+                <version>1.4.11</version>
                 <executions>
                     <execution>
                         <phase>process-test-classes</phase>
