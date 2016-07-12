@@ -21,7 +21,9 @@
     <!-- Default to H2 if no profile provided -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javalite-version>1.4.12-SNAPSHOT</javalite-version>
+        <!--<javalite-version>1.4.12-SNAPSHOT</javalite-version>-->
+        <javalite-version>1.4.11</javalite-version>
+        <yaomaitong-javalite>1.4.13-SNAPSHOT</yaomaitong-javalite>
         <jdbc.driver>org.h2.Driver</jdbc.driver>
         <jdbc.url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1</jdbc.url>
         <jdbc.user>sa</jdbc.user>
@@ -252,9 +254,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.javalite</groupId>
+            <groupId>cn.yaomaitong</groupId>
             <artifactId>javalite-common</artifactId>
-            <version>${javalite-version}</version>
+            <version>${yaomaitong-javalite}</version>
             <exclusions>
                 <exclusion>
                     <groupId>dom4j</groupId>
