@@ -65,7 +65,8 @@ public class LogFilter {
                 join(log, params, ">, <");
                 log.append('>');
             }
-            log(logger, log.append(", took: ").append(time).append(" milliseconds").toString());
+//            log(logger, log.append(", took: ").append(time).append(" milliseconds").toString());
+            logger.info(log.append(", took: ").append(time).append(" milliseconds").toString());
         }
     }
 
