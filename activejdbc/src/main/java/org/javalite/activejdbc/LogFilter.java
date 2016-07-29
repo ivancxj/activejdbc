@@ -59,7 +59,7 @@ public class LogFilter {
         }
 
         if (logger.isInfoEnabled()) {
-            StringBuilder log =  new StringBuilder().append("Query: \"").append(query).append('"');
+            StringBuilder log =  new StringBuilder().append("\"").append(query).append('"');
             if (!empty(params)) {
                 log.append(", with parameters: ").append('<');
                 join(log, params, ">, <");
