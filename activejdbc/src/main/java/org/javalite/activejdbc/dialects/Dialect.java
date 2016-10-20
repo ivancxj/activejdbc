@@ -16,11 +16,12 @@ limitations under the License.
 
 package org.javalite.activejdbc.dialects;
 
+import org.javalite.activejdbc.MetaModel;
+import org.javalite.activejdbc.associations.Many2ManyAssociation;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import org.javalite.activejdbc.MetaModel;
-import org.javalite.activejdbc.associations.Many2ManyAssociation;
 
 /**
  * @author Eric Nielsen

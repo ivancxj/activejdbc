@@ -5,17 +5,10 @@
     <version>1.4.13-SNAPSHOT</version>
     <name>JavaLite - Instrumentation Plugin and JavaAgent</name>
 
-    <!--<parent>-->
-        <!--<groupId>org.javalite</groupId>-->
-        <!--<artifactId>activejdbc-root</artifactId>-->
-        <!--<version>1.4.12-SNAPSHOT</version>-->
-    <!--</parent>-->
-
     <parent>
-        <artifactId>parent-all</artifactId>
-        <groupId>cn.yaomaitong</groupId>
-        <version>1.0</version>
-        <relativePath></relativePath>
+        <groupId>org.javalite</groupId>
+        <artifactId>activejdbc-root</artifactId>
+        <version>1.4.13-SNAPSHOT</version>
     </parent>
 
     <profiles>

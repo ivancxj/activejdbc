@@ -17,8 +17,9 @@ limitations under the License.
 
 package org.javalite.activejdbc.dialects;
 
-import java.util.List;
 import org.javalite.activejdbc.MetaModel;
+
+import java.util.List;
 
 /**
  * @author Igor Polevoy
