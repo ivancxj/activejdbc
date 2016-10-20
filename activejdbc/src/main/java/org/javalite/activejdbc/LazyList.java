@@ -42,17 +42,16 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
     private static final Logger LOGGER = LoggerFactory.getLogger(LazyList.class);
     private final List<String> orderBys = new ArrayList<>();
     private final MetaModel metaModel;
-    private String subQuery;
+    private final String subQuery;
     private final String fullQuery;
-    private Object[] params;
+    private final Object[] params;
     private long limit = -1, offset = -1;
     private final List<Association> includes = new ArrayList<>();
     private final boolean forPaginator;
-    private final Set<String> columns = new HashSet<>();
 
     protected LazyList(String subQuery, MetaModel metaModel, Object... params) {
         this.fullQuery = null;
-        this.subQuery = subQuery == null ? null : "("+subQuery+")";
+        this.subQuery = subQuery;
         this.params = params == null? new Object[]{}: params;
         this.metaModel = metaModel;
         this.forPaginator = false;
@@ -81,42 +80,6 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
         this.params = null;
         this.metaModel = null;
         this.forPaginator = false;
-    }
-
-    /**
-     * multiple where
-     * <code>List<Person> persons = Person.where("age > ?", 12).where("age < ?", 20);</code>
-     * @param subQuery
-     * @param params
-     * @return
-     */
-    public <E extends Model> LazyList<E> where(String subQuery, Object... params) {
-        // add subQuery
-        if(this.subQuery == null){
-            this.subQuery = "("+subQuery+")";
-        }else{
-            this.subQuery += " AND ("+subQuery+")";
-        }
-
-        // add params
-        if(params != null){
-            Object[] result = Arrays.copyOf(this.params, this.params.length + params.length);
-            System.arraycopy(params, 0, result, this.params.length, params.length);
-            this.params = result;
-        }
-
-        return (LazyList<E>) this;
-    }
-
-    /**
-     * first results in the resultSet. same as limit(1)
-     * <code>Person person = Person.where("age > 1").first</code>
-     * @param <T>
-     * @return
-     */
-    public <T extends Model> T first(){
-        LazyList<T> list = limit(1);
-        return list.isEmpty() ? null : list.get(0);
     }
 
     /**
@@ -188,7 +151,7 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
      * even when a post author and comments are requested. Use this with caution as this method can allocate
      * a lot of memory (obviously).
      *
-     * <p/>
+     * <p></p>
      *
      * This method will not follow relationships of related models, but rather only relationships of the current
      * one.
@@ -219,9 +182,9 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
      *
      * @return list of maps, where each map represents a row in the resultset keyed off column names.
      */
-    public List<Map> toMaps(){
+    public List<Map<String, Object>> toMaps() {
         hydrate();
-        List<Map> maps = new ArrayList<>(delegate.size());
+        List<Map<String, Object>> maps = new ArrayList<>(delegate.size());
         for (T t : delegate) {
             maps.add(t.toMap());
         }
@@ -333,10 +296,10 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
     public String toSql(boolean showParameters) {
         String sql;
         if(forPaginator){
-            sql = metaModel.getDialect().formSelect(null, fullQuery, orderBys, limit, offset);
+            sql = metaModel.getDialect().formSelect(null, null, fullQuery, orderBys, limit, offset);
         }else{
             sql = fullQuery != null ? fullQuery
-                    : metaModel.getDialect().formSelect(metaModel.getTableName(), subQuery, orderBys, limit, offset, buildColumns());
+                    : metaModel.getDialect().formSelect(metaModel.getTableName(), null, subQuery, orderBys, limit, offset);
         }
         if (showParameters) {
             StringBuilder sb = new StringBuilder(sql).append(", with parameters: ");
@@ -344,34 +307,6 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
             sql = sb.toString();
         }
         return sql;
-    }
-
-    public <E extends Model> LazyList<E> select(String ... columns) {
-        for (String c : columns) {
-            if (c != null && c.length() > 0) {
-                this.columns.add(c);
-            }
-        }
-
-        return (LazyList<E>) this;
-    }
-
-    private String buildColumns() {
-        StringBuilder columnString = new StringBuilder();
-        int size = columns.size();
-        int index = 0;
-        if (size > 0) {
-            for (String c : columns) {
-                columnString.append(c);
-                if (index < (size - 1)) {
-                    columnString.append(",");
-                }
-                index++;
-            }
-        } else {
-            columnString.append("*");
-        }
-        return columnString.toString();
     }
 
 
@@ -490,7 +425,7 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
      * List firstNames = Person.findAll().collect("first_name");
      * </pre>
      * provided that the corresponding table has a column <code>first_name</code>.
-     * <p/><p/>
+     * <p><p/>
      * Keep in mind, that if all you need is a one column data, this method of getting it is not
      * the most efficient (because since you are using a model, you will query all columns from a table,
      * but will use only one). In these cases, you might want to consider {@link Base#firstColumn(String, Object...)} and

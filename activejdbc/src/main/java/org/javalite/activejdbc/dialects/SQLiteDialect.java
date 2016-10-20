@@ -15,10 +15,9 @@ limitations under the License.
 */
 package org.javalite.activejdbc.dialects;
 
+import java.util.List;
 import org.javalite.activejdbc.MetaModel;
 import org.javalite.common.Convert;
-
-import java.util.List;
 
 /**
  * @author Igor Polevoy
@@ -26,11 +25,11 @@ import java.util.List;
  */
 public class SQLiteDialect extends PostgreSQLDialect {
     @Override
-    public String formSelect(String tableName, String subQuery, List<String> orderBys, long limit, long offset, String... columns) {
+    public String formSelect(String tableName, String[] columns, String subQuery, List<String> orderBys, long limit, long offset) {
         if (limit == -1L && offset != -1L) {
             throw new IllegalArgumentException("SQLite does not support OFFSET without LIMIT. OFFSET is a parameter of LIMIT function");
         }
-        return super.formSelect(tableName, subQuery, orderBys, limit, offset, columns);
+        return super.formSelect(tableName, columns, subQuery, orderBys, limit, offset);
     }
 
     @Override

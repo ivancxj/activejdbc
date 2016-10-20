@@ -15,10 +15,10 @@ limitations under the License.
 */
 package org.javalite.activejdbc.dialects;
 
-import org.javalite.activejdbc.CaseInsensitiveMap;
-import org.javalite.activejdbc.MetaModel;
-import org.javalite.activejdbc.associations.Many2ManyAssociation;
-import org.javalite.common.Convert;
+import static org.javalite.activejdbc.ModelDelegate.metaModelOf;
+import static org.javalite.common.Util.blank;
+import static org.javalite.common.Util.join;
+import static org.javalite.common.Util.joinAndRepeat;
 
 import java.util.Iterator;
 import java.util.List;
@@ -27,8 +27,11 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
-import static org.javalite.activejdbc.ModelDelegate.metaModelOf;
-import static org.javalite.common.Util.*;
+import org.javalite.activejdbc.CaseInsensitiveMap;
+import org.javalite.activejdbc.MetaModel;
+import org.javalite.activejdbc.Registry;
+import org.javalite.activejdbc.associations.Many2ManyAssociation;
+import org.javalite.common.Convert;
 
 /**
  * @author Igor Polevoy
@@ -88,41 +91,37 @@ public class DefaultDialect implements Dialect {
         }
     }
 
-    protected void appendSubQuery(StringBuilder query, String subQuery) {
+    protected void appendSubQuery(StringBuilder queryBuilder, String subQuery) {
         if (!blank(subQuery)) {
             // this is only to support findFirst("order by..."), might need to revisit later
             if (!GROUP_BY_PATTERN.matcher(subQuery).find() && !ORDER_BY_PATTERN.matcher(subQuery).find()) {
-                query.append(" WHERE");
+                queryBuilder.append(" WHERE");
             }
-            query.append(' ').append(subQuery);
+            queryBuilder.append(' ').append(subQuery);
         }
     }
 
-    protected void appendSelect(StringBuilder query, String tableName, String tableAlias, String subQuery,
-            List<String> orderBys, String... columns) {
+    protected void appendSelect(StringBuilder queryBuilder, String tableName, String[] columns, String tableAlias, String subQuery, List<String> orderBys) {
         if (tableName == null) {
-            query.append(subQuery);
+            queryBuilder.append(subQuery);
         } else {
             if (tableAlias == null) {
-                if (columns != null && columns.length > 0) {
-                    query.append("SELECT " + columns[0] + " FROM ").append(tableName);
-                } else {
-                    query.append("SELECT * FROM ").append(tableName);
-                }
+                String cols = columns == null? "*" : join(columns, ",");
+                queryBuilder.append("SELECT ").append(cols).append(" FROM ").append(tableName);
             } else {
-                query.append("SELECT ").append(tableAlias).append(".* FROM ").append(tableName).append(' ')
+                queryBuilder.append("SELECT ").append(tableAlias).append(".* FROM ").append(tableName).append(' ')
                         .append(tableAlias);
             }
-            appendSubQuery(query, subQuery);
+            appendSubQuery(queryBuilder, subQuery);
         }
-        appendOrderBy(query, orderBys);
+        appendOrderBy(queryBuilder, orderBys);
     }
 
     @Override
-    public String formSelect(String tableName, String subQuery, List<String> orderBys, long limit, long offset, String... columns) {
-        StringBuilder fullQuery = new StringBuilder();
-        appendSelect(fullQuery, tableName, null, subQuery, orderBys, columns);
-        return fullQuery.toString();
+    public String formSelect(String tableName, String[] columns, String subQuery, List<String> orderBys, long limit, long offset) {
+        StringBuilder queryBuilder = new StringBuilder();
+        appendSelect(queryBuilder, tableName, columns, null, subQuery, orderBys);
+        return queryBuilder.toString();
     }
 
     @Override
