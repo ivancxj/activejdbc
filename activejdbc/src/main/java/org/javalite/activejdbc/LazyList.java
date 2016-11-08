@@ -566,6 +566,8 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
             List<Model> children = childrenByParentId.get(parent.getId());
             if(children != null){
                 parent.setChildren(childMetaModel.getModelClass(), children);
+            }else{
+                parent.setChildren(childMetaModel.getModelClass(), new SuperLazyList<>());
             }
         }
     }
