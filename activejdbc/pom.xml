@@ -8,7 +8,7 @@
     <parent>
         <artifactId>parent-all</artifactId>
         <groupId>cn.yaomaitong</groupId>
-        <version>1.0</version>
+        <version>1.1</version>
         <relativePath></relativePath>
     </parent>
 
