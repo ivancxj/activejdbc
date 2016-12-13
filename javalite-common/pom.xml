@@ -14,7 +14,7 @@
     <parent>
         <artifactId>parent-all</artifactId>
         <groupId>cn.yaomaitong</groupId>
-        <version>1.0</version>
+        <version>1.1</version>
         <relativePath></relativePath>
     </parent>
 
@@ -48,6 +48,8 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>

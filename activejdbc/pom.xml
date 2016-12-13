@@ -8,7 +8,7 @@
     <parent>
         <artifactId>parent-all</artifactId>
         <groupId>cn.yaomaitong</groupId>
-        <version>1.0</version>
+        <version>1.1</version>
         <relativePath></relativePath>
     </parent>
 
@@ -218,6 +218,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>provided</scope>
+            <version>4.11</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
