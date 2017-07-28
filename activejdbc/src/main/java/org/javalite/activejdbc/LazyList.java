@@ -84,6 +84,28 @@ public class LazyList<T extends Model> extends AbstractLazyList<T> implements Ex
     }
 
     /**
+     * <code>List<Person> persons = Person.in("id", new ArrayList().add(1));</code>
+     * @param column
+     * @param params
+     */
+    public <E extends Model> LazyList<E> in(String column, Collection params) {
+        if (column == null || column.length() == 0) {
+            throw new IllegalArgumentException("column is null");
+        }
+
+        if (params == null || params.size() == 0) {
+            throw new IllegalArgumentException("params is null or size is 0");
+        }
+
+        int count = params.size();
+        StringBuilder query = new StringBuilder().append(column).append(" IN (");
+        appendQuestions(query, count);
+        query.append(')');
+
+        return where(query.toString(), params.toArray());
+    }
+
+    /**
      * multiple where
      * <code>List<Person> persons = Person.where("age > ?", 12).where("age < ?", 20);</code>
      * @param subQuery
