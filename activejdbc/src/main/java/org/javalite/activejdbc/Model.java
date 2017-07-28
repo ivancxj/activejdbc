@@ -2279,6 +2279,10 @@ public abstract class Model extends CallbackSupport implements Externalizable {
         return ModelDelegate.where(Model.<T>modelClass(), subquery, params);
     }
 
+    public static <T extends Model> LazyList<T> in(String column, Collection params) {
+        return ModelDelegate.in(Model.<T>modelClass(), column, params);
+    }
+
     /**
      * Synonym of {@link #where(String, Object...)}
      *

@@ -1,33 +1,22 @@
 package org.javalite.activejdbc;
 
-import org.javalite.activejdbc.cache.QueryCache;
-
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.javalite.activejdbc.associations.BelongsToAssociation;
 import org.javalite.activejdbc.associations.Many2ManyAssociation;
+import org.javalite.activejdbc.cache.QueryCache;
 import org.javalite.activejdbc.conversion.BlankToNullConverter;
 import org.javalite.activejdbc.conversion.Converter;
 import org.javalite.activejdbc.conversion.ZeroToNullConverter;
-import org.javalite.activejdbc.validation.DateConverter;
-import org.javalite.activejdbc.validation.EmailValidator;
-import org.javalite.activejdbc.validation.NumericValidationBuilder;
-import org.javalite.activejdbc.validation.RangeValidator;
-import org.javalite.activejdbc.validation.RegexpValidator;
-import org.javalite.activejdbc.validation.TimestampConverter;
-import org.javalite.activejdbc.validation.ValidationBuilder;
-import org.javalite.activejdbc.validation.Validator;
+import org.javalite.activejdbc.validation.*;
 import org.javalite.common.Convert;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.javalite.common.Util.*;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.*;
+
+import static org.javalite.common.Util.blank;
+import static org.javalite.common.Util.empty;
 
 /**
  * This class exists to offload some logic from {@link Model}  class.
@@ -402,6 +391,11 @@ public final class ModelDelegate {
             }
         }
         return new LazyList<>(subquery, metaModelOf(clazz), params);
+    }
+
+    public static <T extends Model> LazyList<T> in(Class<T> clazz, String column, Collection params) {
+        LazyList<T> list = new LazyList<>(null, metaModelOf(clazz), null);
+        return list.in(column, params);
     }
 
     public static void zeroToNull(Class<? extends Model> clazz, String... attributeNames) {
